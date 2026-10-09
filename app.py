@@ -262,7 +262,7 @@ def create_scene_image(text: str, output_path: str, index: int) -> None:
     draw.rounded_rectangle(
         (card_x1, card_y1, card_x2, card_y2),
         radius=28,
-        fill=(15, 23, 42, 180),
+        fill=(15, 23, 42),
         outline=(71, 85, 105),
         width=2,
     )

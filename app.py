@@ -32,6 +32,7 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Environment variables
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
+PORT = int(os.getenv("PORT", "8000"))
 FREE_VIDEO_LIMIT = 5
 PURCHASE_BONUS = 10
 TOKEN_EXPIRY_HOURS = 24
@@ -457,4 +458,4 @@ def get_video(filename: str):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)

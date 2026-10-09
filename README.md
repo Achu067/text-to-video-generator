@@ -1,78 +1,72 @@
-# Text-to-Video Generator
+# VideoMaker - Text to Video Generator
 
-A professional text-to-video generator with a simple credit system:
-- **5 free videos** to start
-- **$2 unlocks 10 more videos**
+A secure, production-ready text-to-video app with:
+- **5 free videos** per user
+- **$2 to unlock 10 more videos**
+- User authentication with JWT tokens
+- Password hashing (PBKDF2)
+- SQLite database for user management
+- Private source code, public web app
 
-Perfect for creating video content from scripts without any technical knowledge.
+## 🚀 Deployment Setup
 
-## Features
+### Private Code + Public Web
 
-✨ **Core Features:**
-- Convert text to speech with multiple language support
-- Automatic scene slide generation with gradient backgrounds
-- Video composition with synchronized audio and visuals
-- Real-time character count and script preview
-- Download generated videos in MP4 format
+Your GitHub repo is **private** (only you see the code).
+Your deployed app is **public** (anyone can use it via a web URL).
 
-🎬 **Video Settings:**
-- Multiple language options (English, Hindi, Spanish, French, German, Italian)
-- Video quality selection (HD 720p, Full HD 1080p)
-- Customizable scene durations based on script length
+### How it Works
 
-💳 **Monetization:**
-- 5 free videos per user
-- $2 one-time purchase for 10 additional videos
-- Simple in-memory credit tracking (can be upgraded to database)
-- Purchase flow with payment modal
+```
+User (Chrome on phone)
+    ↓
+Opens: https://your-app.railway.app
+    ↓
+Sees login/signup
+    ↓
+Creates account with email + password
+    ↓
+Gets 5 free videos
+    ↓
+Can generate videos or pay $2 for 10 more
+    ↓
+Your code stays private on GitHub
+```
 
-🎨 **Modern UI:**
-- Professional gradient design
-- Responsive layout (desktop, tablet, mobile)
-- Real-time status updates and progress visualization
-- Video preview and download functionality
-- Share buttons and social integration ready
+## 📋 Prerequisites
 
-## Tech Stack
-
-**Backend:**
 - Python 3.10+
-- FastAPI
-- gTTS (Google Text-to-Speech)
-- MoviePy (video composition)
-- Pillow (image generation)
+- FFmpeg
+- Railway account (free tier available)
+- GitHub account
 
-**Frontend:**
-- HTML5
-- CSS3 (Flexbox, Grid, Gradients)
-- Vanilla JavaScript (ES6+)
+## 🔒 Security Features
 
-**Video Processing:**
-- FFmpeg (codec, encoding)
-- H.264 video codec
-- AAC audio codec
+- ✅ Password hashing (PBKDF2-SHA256)
+- ✅ JWT token authentication
+- ✅ Private GitHub repo (code not visible to users)
+- ✅ Environment variables for secrets
+- ✅ User-specific credit tracking
+- ✅ Protected API routes
+- ✅ HTTPS on Railway (automatic)
 
-## Installation
+## 📦 Local Setup (for development)
 
-### Prerequisites
-- Python 3.10 or higher
-- FFmpeg installed on your system
-
-### 1. Clone the Repository
+### 1. Clone private repo
 
 ```bash
 git clone https://github.com/Achu067/text-to-video-generator.git
 cd text-to-video-generator
 ```
 
-### 2. Create Virtual Environment
+### 2. Create virtual environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -82,8 +76,7 @@ pip install -r requirements.txt
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt update
-sudo apt install ffmpeg
+sudo apt update && sudo apt install ffmpeg
 ```
 
 **macOS:**
@@ -92,192 +85,183 @@ brew install ffmpeg
 ```
 
 **Windows:**
-- Download from [ffmpeg.org](https://ffmpeg.org/download.html)
-- Add FFmpeg to your system PATH
+Download from https://ffmpeg.org/download.html and add to PATH
 
-### 5. Run the Application
+### 5. Set environment variables
+
+Create `.env` file:
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+```
+SECRET_KEY=your-random-secret-key-here
+DATABASE_URL=sqlite:///app.db
+```
+
+### 6. Run locally
 
 ```bash
 uvicorn app:app --reload
 ```
 
-Open your browser and navigate to:
+Open: http://localhost:8000
+
+Test login with any email/password.
+
+## 🚢 Deployment on Railway
+
+### Step 1: Make GitHub repo private
+
+1. Go to your GitHub repo settings
+2. Scroll to "Danger Zone"
+3. Click "Change repository visibility"
+4. Select "Private"
+5. Confirm
+
+### Step 2: Deploy to Railway
+
+1. Go to https://railway.app
+2. Click "New Project"
+3. Select "Deploy from GitHub"
+4. Log in with GitHub
+5. Select your **private** repo
+6. Railway will deploy automatically
+
+### Step 3: Add environment variables to Railway
+
+In Railway dashboard:
+1. Go to your project
+2. Click "Variables"
+3. Add:
+   ```
+   SECRET_KEY=generate-a-random-string-here
+   DATABASE_URL=sqlite:///app.db
+   PORT=8000
+   ```
+
+### Step 4: Get your public URL
+
+Railway will give you a URL like:
 ```
-http://localhost:8000
+https://text-to-video-generator-prod.railway.app
 ```
 
-## Usage
+This is your **public app URL**.
 
-1. **Write your script** in the text area
-2. **Select language** for text-to-speech narration
-3. **Choose video quality** (HD or Full HD)
-4. **Click "Generate Video"** to create your video
-5. **Preview** the video in real-time
-6. **Download** your completed video
+### Step 5: Share with users
 
-## Project Structure
+Users can access at:
+```
+https://text-to-video-generator-prod.railway.app
+```
+
+They sign up, get 5 free videos, and can purchase more.
+
+Your code stays **private** on GitHub.
+
+## 💳 Adding Stripe Payments (Optional)
+
+Once the app is live, you can add real payments:
+
+1. Sign up at https://stripe.com
+2. Get Stripe Secret Key
+3. Add to Railway env vars: `STRIPE_SECRET_KEY=sk_...`
+4. I can add Stripe integration to the app
+5. Users pay $2 for 10 more videos
+
+## 📊 Project Structure
 
 ```
 text-to-video-generator/
-├── app.py                      # Main FastAPI application
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── .gitignore                 # Git ignore file
+├── app.py                 # FastAPI backend (private)
+├── requirements.txt       # Dependencies
+├── Procfile              # Railway deployment config
+├── .env.example          # Environment template
+├── .gitignore            # Hide .env, .db, videos
 ├── templates/
-│   └── index.html            # Main UI
+│   └── index.html        # Web UI
 ├── static/
-│   ├── style.css             # Styling
-│   └── script.js             # Frontend logic
-├── generated_videos/         # Output directory for videos
-│   └── .gitkeep
-└── .venv/                    # Virtual environment
+│   ├── style.css         # Styling
+│   └── script.js         # Frontend logic
+├── generated_videos/     # Video output (ignored in git)
+└── app.db                # SQLite database (ignored in git)
 ```
 
-## API Endpoints
+## 🔑 API Endpoints
 
-### GET `/`
-Serves the main HTML page.
+All routes require JWT authentication (Bearer token).
 
-### GET `/api/credits/{user_id}`
-Fetch remaining credits for a user.
+### Public Routes
+- `POST /api/signup` - Register new user
+- `POST /api/login` - Log in and get token
+- `GET /video/{filename}` - Download video
 
-**Response:**
-```json
-{
-  "user_id": "guest-user",
-  "remaining_credits": 5,
-  "free_limit": 5,
-  "purchase_bonus": 10,
-  "price_usd": 2
-}
-```
+### Protected Routes (require token)
+- `GET /api/me` - Get user info and credits
+- `POST /api/generate` - Generate video (costs 1 credit)
+- `GET /api/history` - Get user's video history
+- `POST /api/purchase` - Buy 10 more videos
 
-### POST `/api/generate`
-Generate a video from text.
+## 🛡️ Best Practices
 
-**Request:**
-```json
-{
-  "text": "Your script here",
-  "voice": "en",
-  "user_id": "user-id-123"
-}
-```
+1. **Keep repo private** - Your code is not visible to users
+2. **Use environment variables** - Never commit secrets
+3. **HTTPS only** - Railway provides this automatically
+4. **Token expiry** - Tokens expire after 24 hours
+5. **Password hashing** - Passwords are hashed with PBKDF2
+6. **Database backups** - Regularly back up your SQLite DB
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Video generated successfully.",
-  "video_url": "/video/filename.mp4",
-  "filename": "filename.mp4",
-  "remaining_credits": 4
-}
-```
+## 💰 Revenue Model
 
-### POST `/api/purchase`
-Purchase additional video credits.
+- User signs up (free)
+- Generates 5 free videos
+- After 5 videos, pay $2 for 10 more
+- You get ~$1.72 per sale (after Stripe fees)
 
-**Request:**
-```json
-{
-  "user_id": "user-id-123"
-}
-```
+## 📈 Scaling (Future)
 
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Purchase successful. You received 10 extra videos.",
-  "price_usd": 2,
-  "credits_added": 10,
-  "remaining_credits": 14
-}
-```
+When you outgrow Railway:
+- Migrate to PostgreSQL (away from SQLite)
+- Add CDN for video delivery
+- Use async task queue (Celery) for video generation
+- Add analytics and user dashboard
+- Implement real payment webhooks
 
-### GET `/video/{filename}`
-Download a generated video.
+## 🆘 Troubleshooting
 
-## Credit System
+**"FFmpeg not found"**
+- Install FFmpeg for your OS
+- Add to system PATH
 
-- **Free Tier:** 5 videos per user
-- **Purchase:** $2 adds 10 videos
-- **Storage:** Currently in-memory (ideal for local testing)
-- **Persistence:** Can be upgraded to SQLite or PostgreSQL
+**"Video generation is slow"**
+- Normal on shared hosting
+- Optimize with async processing later
 
-## Next Steps for Production
+**"Can't log in"**
+- Make sure `.env` has `SECRET_KEY` set
+- Database file needs write permissions
 
-1. **Database Integration:**
-   - Add SQLite or PostgreSQL for persistent storage
-   - User registration and authentication
-   - Video history and analytics
+**"404 on Railway"**
+- Check Procfile is deployed
+- Check environment variables are set
 
-2. **Payment Integration:**
-   - Integrate Stripe for real payment processing
-   - Webhook handling for payment confirmations
-   - Invoice generation
+## 📝 License
 
-3. **Premium Features:**
-   - AI image generation (DALL-E, Midjourney)
-   - Premium TTS voices (Eleven Labs, Google Cloud)
-   - 4K video export
-   - Music and background audio selection
-   - Custom templates and themes
+MIT
 
-4. **Deployment:**
-   - Docker containerization
-   - Cloud hosting (AWS, GCP, Heroku)
-   - CDN for video delivery
-   - Monitoring and error logging
+## 🤝 Support
 
-5. **Performance:**
-   - Async video processing with task queues (Celery)
-   - Video caching and optimization
-   - Concurrent video generation
-
-## Troubleshooting
-
-**FFmpeg not found:**
-- Ensure FFmpeg is installed and added to PATH
-- On Linux: `which ffmpeg`
-- On Mac: `brew list ffmpeg`
-
-**Video generation is slow:**
-- This is normal on systems with limited resources
-- Processing takes 2-5 minutes depending on script length
-- Can be optimized with cloud processing later
-
-**Audio not syncing with video:**
-- This is a known issue with MoviePy
-- Solution: Update to latest MoviePy version
-- Or upgrade to cloud-based video processing
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or open issues.
-
-## License
-
-MIT License - See LICENSE file for details
-
-## Support
-
-For issues, questions, or suggestions, please open a GitHub issue.
-
-## Roadmap
-
-- [ ] User authentication and accounts
-- [ ] Database persistence (SQLite/PostgreSQL)
-- [ ] Real Stripe payment integration
-- [ ] AI image generation integration
-- [ ] Premium TTS voices
-- [ ] 4K video export
-- [ ] Video templates and customization
-- [ ] Batch video generation
-- [ ] Analytics dashboard
-- [ ] Mobile app (React Native)
+For issues or questions, open a GitHub issue (private repo).
 
 ---
 
-Built with ❤️ for creators. Start creating amazing videos today!
+**Your app is now secure, private, and ready for users.** 🎉
+
+Next steps:
+1. Make GitHub repo private
+2. Deploy to Railway
+3. Set environment variables
+4. Share the public URL with users
+5. (Optional) Add Stripe for real payments
